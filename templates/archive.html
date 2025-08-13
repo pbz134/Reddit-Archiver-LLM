@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>r/{{ subreddit }}</title>
+    <style>
+        :root {
+            --newreddit-header-bg: linear-gradient(to right, #5f2992, #0079d3);
+            --newreddit-icon-bg: #1a1a1b;
+            --newreddit-vote-bg: #d7dadc;
+            --newreddit-vote-hover-bg: #c5c8cc;
+            --newreddit-text-1: #1a1a1b;
+            --newreddit-text-2: #424242;
+            --newreddit-text-3: #737373;
+            --newreddit-border-1: #d7dadc;
+            --newreddit-hover-bg: #f0f3fa;
+            --newreddit-danger-bg: #ff4500;
+            --newreddit-danger-hover-bg: #e0311c;
+            --newreddit-warning-bg: #faa61a;
+            --newreddit-warning-hover-bg: #ff9500;
+            --newreddit-success-bg: #d00;
+            --newreddit-success-hover-bg: #c00;
+        }
+
+        @font-face {
+            font-family: "Roboto";
+            src: url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+            font-display: swap;
+        }
+
+        body {
+            font-family: "Helvetica Neue", sans-serif;
+            background: #f6f8fa;
+            color: var(--newreddit-text-1);
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--newreddit-header-bg);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .home-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+            padding: 0;
+            margin-right: 8px;
+        }
+
+        .home-button svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+        }
+
+        .home-button span {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .subreddit-info {
+            display: flex;
+            align-items: center;
+            color: white;
+            flex-grow: 1;
+            margin-left: 5px;
+        }
+
+        .subreddit-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 3px solid white;
+        }
+
+        .subreddit-name {
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+
+        .subreddit-name:hover {
+            text-decoration: underline;
+        }
+
+        .community-header {
+            background: #fffbf0;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--newreddit-border-1);
+        }
+
+        .community-header-content {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .community-stats {
+            margin-top: 8px;
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--newreddit-text-3);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--newreddit-text-1);
+            font-size: inherit;
+        }
+
+        .stat-label {
+            text-transform: capitalize;
+        }
+
+        .search-container {
+            max-width: 960px;
+            margin: 0 auto 16px;
+            padding: 8px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--newreddit-border-1);
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0079d3;
+        }
+
+        .search-button, .clear-button {
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-button {
+            background: var(--newreddit-header-bg);
+            color: white;
+        }
+
+        .search-button:hover {
+            opacity: 0.9;
+        }
+
+        .clear-button {
+            background: #efefef;
+            color: var(--newreddit-text-2);
+        }
+
+        .clear-button:hover {
+            background: #e0e0e0;
+        }
+
+        .main-container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+        }
+
+        .content-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .posts-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 12px;
+        }
+
+        .post {
+            margin: 12px;
+            padding: 0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .post:hover {
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .post-single {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .post-single .post-main {
+            min-height: 100px; /* Ensure post main has minimum height */
+        }
+
+        .vote-container {
+            text-align: center;
+            min-width: 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-top: 8px;
+        }
+
+        .vote-button {
+            background: var(--newreddit-vote-bg);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            padding: 0;
+            margin: 0 auto 2px;
+        }
+
+        .vote-button:hover {
+            background: var(--newreddit-vote-hover-bg);
+        }
+
+        .vote-button svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .vote-count {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .post-main {
+            flex: 1;
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 4px;
+            color: var(--newreddit-text-1);
+            hyphens: auto;
+        }
+
+        .post-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .post-title a:hover {
+            text-decoration: underline;
+        }
+
+        .post-info {
+            font-size: 12px;
+            color: var(--newreddit-text-3);
+            margin-bottom: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .post-author {
+            color: var(--newreddit-text-2);
+            font-weight: 500;
+        }
+
+        .post-badge {
+            background: var(--newreddit-danger-bg);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 4px;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: var(--newreddit-text-3);
+            margin-bottom: 8px;
+        }
+
+        .post-meta a {
+            color: var(--newreddit-text-3);
+            text-decoration: none;
+        }
+
+        .post-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .post-text {
+            font-size: 14px;
+            color: var(--newreddit-text-2);
+            margin-bottom: 12px;
+            white-space: pre-line;
+            overflow-wrap: break-word;
+        }
+
+        .post-media {
+            margin-top: 16px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            height: auto;
+            min-height: 100px;
+        }
+
+        .post-media .single-image {
+            display: block;
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #efefef;
+            cursor: zoom-in;
+            object-fit: contain;
+        }
+
+        .post-media .wide-banner {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #efefef;
+            object-fit: cover;
+        }
+
+        .post-media .gallery-container {
+            position: relative;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            min-height: 200px;
+        }
+
+        .post-media .gallery-slide {
+            display: none;
+            text-align: center;
+        }
+
+        .post-media .gallery-slide.active {
+            display: block;
+        }
+
+        .post-media .gallery-slide img {
+            display: block;
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #efefef;
+            cursor: zoom-in;
+            object-fit: contain;
+        }
+
+        .post-media .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            z-index: 10;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .post-media .gallery-nav:hover {
+            background-color: rgba(0,0,0,0.7);
+            opacity: 1;
+        }
+
+        .post-media .gallery-prev {
+            left: 10px;
+        }
+
+        .post-media .gallery-next {
+            right: 10px;
+        }
+
+        .post-media .gallery-counter {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--newreddit-text-3);
+        }
+
+        .saved-button {
+            position: absolute;
+            top: 24px;
+            right: 12px;
+            background: transparent;
+            border: none;
+            color: var(--newreddit-text-2);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .saved-button:hover {
+            background: #f0f3fa;
+        }
+
+        .comments-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 12px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .comments-container .comments-header {
+            border-top: 1px solid var(--newreddit-border-1);
+            padding: 10px 16px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .comments-container .comments-section {
+            padding: 0 16px 16px;
+        }
+
+        .comment {
+            margin-bottom: 16px;
+            padding: 8px 0;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .comment-meta {
+            font-size: 12px;
+            color: var(--newreddit-text-3);
+        }
+
+        .comment-body {
+            color: var(--newreddit-text-2);
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            margin-left: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            text-align: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            margin-top: 5vh;
+            border-radius: 8px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            font-weight: 400;
+            transition: opacity 0.2s;
+        }
+
+        .close:hover {
+            opacity: 0.8;
+        }
+
+        video {
+            border-radius: 8px;
+            max-width: 100%;
+        }
+
+        .result-count {
+            font-size: 12px;
+            color: var(--newreddit-text-3);
+            margin-bottom: 8px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--newreddit-text-3);
+            background: white;
+            border-radius: 8px;
+            margin: 12px;
+        }
+
+        .lazy {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .lazy.loaded {
+            opacity: 1;
+        }
+
+        .video-container {
+            position: relative;
+            margin-top: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .sidebar-container {
+            width: 300px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-card-header {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--newreddit-text-2);
+        }
+
+        .sidebar-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #efefef;
+            cursor: pointer;
+            color: var(--newreddit-text-1);
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-list li:hover {
+            background: #f0f3fa;
+        }
+
+        .sidebar-list li:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 960px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar-container {
+                width: 100%;
+            }
+            
+            .subreddit-name {
+                font-size: 18px;
+            }
+            
+            .subreddit-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{{ url_for('index') }}" class="home-button">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.71 2.29a1 1 0 0 0-1.42 0l-10 10a1 1 0 0 0 1.42 1.42L2 13.41V19a2 2 0 0 0 2 2h3.59a1 1 0 0 0 .7-.29l9.91-9.91a1 1 0 0 0 0-1.42zM5.41 19H4v-1.59L12.59 9H14v.41z"></path>
+            </svg>
+            <span>home</span>
+        </a>
+        
+        <div class="subreddit-info">
+            {% if icon_url %}
+                <img src="{{ icon_url }}" alt="Subreddit Icon" class="subreddit-icon">
+            {% endif %}
+            <a href="{{ url_for('show_subreddit', subreddit=subreddit) }}" class="subreddit-name">r/{{ subreddit }}</a>
+        </div>
+    </div>
+
+    <div class="community-header">
+        <div class="community-header-content">
+            <h2>Offline Archive of r/{{ subreddit }}</h2>
+            <div class="community-stats">
+                <div class="stat-item">
+                    <span class="stat-value">{{ posts|length }}</span>
+                    <span class="stat-label">posts</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">{{ posts|sum(attribute='score') }}</span>
+                    <span class="stat-label">points</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search posts by title, text, or author...">
+        <button class="search-button" id="searchButton">Search</button>
+        <button class="clear-button" id="clearButton">Clear</button>
+    </div>
+    
+    <div class="result-count" id="resultCount"></div>
+    
+    <div class="main-container">
+        <div class="content-container">
+            <div id="posts">
+                {% for post in posts %}
+                <div class="post posts-container" onclick="window.open('/r/{{ subreddit }}/post/{{ loop.index0 }}', '_blank')">
+                    <div class="vote-container">
+                        <button class="vote-button" title="Upvote">
+                            <svg fill="currentColor" viewBox="0 0 10 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.442 1.542a1.25 1.25 0 0 1-.824-.864L7.55.325C7.513.133 7.375 0 7.211 0H2.79c-.164 0-.303.133-.338.325l-.067.353a1.25 1.25 0 0 1-.824.864C.271 2.28.001 3.014 0 3.785v.942c0 .04.01.079.027.116L3.55 17.302c.065.243.291.414.544.414h1.812c.253 0 .48-.171.544-.414L10 4.843V3.785c-.001-.77-.271-1.505-.783-2.054-.393-.428-.877-.746-1.41-.914a1.25 1.25 0 0 1-.824-.864l-.07-.353a.384.384 0 0 0-.07-.177Z" fill-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <div class="vote-count">{{ post.score }}</div>
+                        <button class="vote-button" title="Downvote">
+                            <svg fill="currentColor" viewBox="0 0 10 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1.558 18.458a1.25 1.25 0 0 1 .824.864l.067.354A.384.384 0 0 0 2.52 20h4.42c.164 0 .303-.133.338-.325l.067-.354a1.25 1.25 0 0 1 .824-.864c.532-.168 1.016-.486 1.41-.914.511-.549.782-1.285.783-2.054v-.942a.384.384 0 0 0-.027-.117L6.45 2.698c-.065-.243-.291-.414-.544-.414H4.094c-.253 0-.48.171-.544.414L0 15.157v1.058c.001.77.271 1.505.783 2.054.393.428.877.746 1.41.914a1.25 1.25 0 0 1 .824.864l.07.353a.384.384 0 0 0 .07.177Z" fill-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="post-main">
+                        <h1 class="post-title">{{ post.title }}</h1>
+                        <div class="post-info">
+                            <span class="post-author">Posted by u/{{ post.author }}</span>
+                            <a href="{{ post.url }}" target="_blank" rel="noopener noreferrer">Original post</a>
+                        </div>
+                        <div class="post-text">{{ post.text }}</div>
+                        
+                        <!-- Media Section -->
+                        <div class="post-media">
+                            {% if post.local_media %}
+                                <!-- Single Image -->
+                                {% if post.local_media is string and post.local_media.endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
+                                    <img data-src="{{ post.local_media }}" alt="Post image" class="single-image lazy"
+                                         onclick="event.stopPropagation(); openModal('{{ post.local_media }}')">
+
+                                <!-- Video -->
+                                {% elif post.local_media is string and post.local_media.endswith(('.mp4', '.webm')) %}
+                                    <div class="video-container">
+                                        <video controls onclick="event.stopPropagation()" preload="none">
+                                            <source data-src="{{ post.local_media }}" type="video/mp4">
+                                        </video>
+                                    </div>
+
+                                <!-- Gallery -->
+                                {% elif post.local_media is iterable and post.local_media is not string %}
+                                    <div class="gallery-container">
+                                        {% for image_url in post.local_media %}
+                                            <div class="gallery-slide {% if loop.first %}active{% endif %}" data-index="{{ loop.index0 }}">
+                                                <img data-src="{{ image_url }}" alt="Gallery image" class="lazy"
+                                                     onclick="event.stopPropagation(); openModal('{{ image_url }}')">
+                                            </div>
+                                        {% endfor %}
+
+                                        {% if post.local_media|length > 1 %}
+                                            <button class="gallery-nav gallery-prev" onclick="event.stopPropagation(); changeSlide(this.parentElement, -1)">‹</button>
+                                            <button class="gallery-nav gallery-next" onclick="event.stopPropagation(); changeSlide(this.parentElement, 1)">›</button>
+                                            <div class="gallery-counter">
+                                                <span class="current-slide">1</span> / {{ post.local_media|length }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="sidebar-container">
+            <div class="sidebar-card">
+                <div class="sidebar-card-header">About Community</div>
+                <p style="font-size: 13px;">This is an offline archive of r/{{ subreddit }}.</p>
+                <div class="community-stats" style="margin-top: 12px;">
+                    <div class="stat-item">
+                        <span class="stat-value">{{ posts|length }}</span>
+                        <span class="stat-label">Posts</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ posts|sum(attribute='score') }}</span>
+                        <span class="stat-label">Points</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-card">
+                <div class="sidebar-card-header">Subreddits</div>
+                <ul class="sidebar-list">
+                    {% for sub_name in subreddits %}
+                        <li>
+                            <a href="{{ url_for('show_subreddit', subreddit=sub_name) }}">r/{{ sub_name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- Single Post Template (for when /post/id is opened) -->
+    <template id="post-template">
+        <div>
+            <div class="posts-container">
+                <div class="post post-single">
+                    <div class="vote-container">
+                        <button class="vote-button" title="Upvote">
+                            <svg fill="currentColor" viewBox="0 0 10 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.442 1.542a1.25 1.25 0 0 1-.824-.864L7.55.325C7.513.133 7.375 0 7.211 0H2.79c-.164 0-.303.133-.338.325l-.067.353a1.25 1.25 0 0 1-.824.864C.271 2.28.001 3.014 0 3.785v.942c0 .04.01.079.027.116L3.55 17.302c.065.243.291.414.544.414h1.812c.253 0 .48-.171.544-.414L10 4.843V3.785c-.001-.77-.271-1.505-.783-2.054-.393-.428-.877-.746-1.41-.914a1.25 1.25 0 0 1-.824-.864l-.07-.353a.384.384 0 0 0-.07-.177Z" fill-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <div class="vote-count"></div>
+                        <button class="vote-button" title="Downvote">
+                            <svg fill="currentColor" viewBox="0 0 10 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1.558 18.458a1.25 1.25 0 0 1 .824.864l.067.354A.384.384 0 0 0 2.52 20h4.42c.164 0 .303-.133.338-.325l.067-.354a1.25 1.25 0 0 1 .824-.864c.532-.168 1.016-.486 1.41-.914.511-.549.782-1.285.783-2.054v-.942a.384.384 0 0 0-.027-.117L6.45 2.698c-.065-.243-.291-.414-.544-.414H4.094c-.253 0-.48.171-.544.414L0 15.157v1.058c.001.77.271 1.505.783 2.054.393.428.877.746 1.41.914a1.25 1.25 0 0 1 .824.864l.07.353a.384.384 0 0 0 .07.177Z" fill-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="post-main">
+                        <h1 class="post-title"></h1>
+                        <div class="post-info">
+                            <span class="post-author"></span>
+                            <a href="" target="_blank" rel="noopener noreferrer">Original post</a>
+                        </div>
+                        <div class="post-text"></div>
+                        <div class="post-media"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="comments-container">
+                <div class="comments-header">Comments (0)</div>
+                <div class="comments-section"></div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        // Store the original posts data
+        let originalPosts = [];
+        let allPosts = [];
+        
+        // Initialize with existing posts
+        document.addEventListener('DOMContentLoaded', function() {
+            const postElements = document.querySelectorAll('#posts .post');
+            
+            postElements.forEach((postElement, index) => {
+                const title = postElement.querySelector('.post-title').textContent;
+                const author = postElement.querySelector('.post-author').textContent.match(/u\/(.+)/)[1];
+                const text = postElement.querySelector('.post-text').textContent;
+                
+                allPosts.push({
+                    element: postElement,
+                    index: index,
+                    title: title,
+                    author: author,
+                    text: text
+                });
+            });
+            
+            originalPosts = [...allPosts];
+            updateResultCount(originalPosts.length);
+            
+            // Initialize lazy loading
+            initLazyLoading();
+        });
+        
+        // Lazy loading implementation
+        function initLazyLoading() {
+            const lazyMedia = document.querySelectorAll('.lazy');
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const media = entry.target;
+                        if (media.tagName === 'IMG') {
+                            media.src = media.dataset.src;
+                        } else if (media.tagName === 'VIDEO') {
+                            const source = media.querySelector('source');
+                            source.src = source.dataset.src;
+                            media.load();
+                        }
+                        
+                        media.onload = function() {
+                            media.classList.add('loaded');
+                            if (media.tagName === 'IMG') {
+                                adjustImageAspectRatio(media);
+                            }
+                        };
+                        
+                        observer.unobserve(media);
+                    }
+                });
+            }, {
+                rootMargin: '200px 0px' // Load media 200px before it enters viewport
+            });
+
+            lazyMedia.forEach(media => {
+                observer.observe(media);
+            });
+        }
+        
+        // Search functionality
+        document.getElementById('searchButton').addEventListener('click', performSearch);
+        document.getElementById('clearButton').addEventListener('click', clearSearch);
+        document.getElementById('searchInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                clearSearch();
+                return;
+            }
+            
+            const filteredPosts = originalPosts.filter(post => {
+                return post.title.toLowerCase().includes(searchTerm) || 
+                       post.text.toLowerCase().includes(searchTerm) || 
+                       post.author.toLowerCase().includes(searchTerm);
+            });
+            
+            displayPosts(filteredPosts);
+            updateResultCount(filteredPosts.length);
+        }
+        
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            displayPosts(originalPosts);
+            updateResultCount(originalPosts.length);
+        }
+        
+        function displayPosts(posts) {
+            const postsContainer = document.getElementById('posts');
+            
+            // Clear existing posts
+            postsContainer.innerHTML = '';
+            
+            if (posts.length === 0) {
+                postsContainer.innerHTML = '<div class="no-results">No posts found matching your search criteria.</div>';
+                return;
+            }
+            
+            // Add posts to the container
+            posts.forEach(post => {
+                postsContainer.appendChild(post.element);
+            });
+            
+            // Reinitialize lazy loading for newly displayed posts
+            initLazyLoading();
+        }
+        
+        function updateResultCount(count) {
+            const resultCountElement = document.getElementById('resultCount');
+            if (count === originalPosts.length) {
+                resultCountElement.textContent = '';
+            } else {
+                resultCountElement.textContent = `Showing ${count} of ${originalPosts.length} posts`;
+            }
+        }
+
+        // Gallery navigation
+        function changeSlide(container, direction) {
+            const slides = container.querySelectorAll('.gallery-slide');
+            const currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
+            let newIndex = currentIndex + direction;
+
+            // Wrap around
+            if (newIndex < 0) newIndex = slides.length - 1;
+            if (newIndex >= slides.length) newIndex = 0;
+
+            // Update active slide
+            slides[currentIndex].classList.remove('active');
+            slides[newIndex].classList.add('active');
+
+            // Update counter
+            container.querySelector('.current-slide').textContent = newIndex + 1;
+            
+            // Lazy load the new slide if needed
+            const img = slides[newIndex].querySelector('img');
+            if (img && !img.src && img.dataset.src) {
+                img.src = img.dataset.src;
+                img.classList.add('loaded');
+                adjustImageAspectRatio(img);
+            }
+        }
+
+        // Image modal functionality
+        function openModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = src;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        // Close modal when clicking outside image
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('imageModal')) {
+                closeModal();
+            }
+        }
+
+        // Adjust image aspect ratio
+        function adjustImageAspectRatio(img) {
+            const aspectRatio = img.naturalWidth / img.naturalHeight;
+            if (aspectRatio >= 1 && aspectRatio <= 1.2) {
+                img.classList.add('wide-banner');
+            }
+        }
+
+        // Handle single post view
+        if (window.location.pathname.includes('/post/')) {
+            const pathParts = window.location.pathname.split('/');
+            const subreddit = pathParts[2]; // Get subreddit from URL
+            const postId = parseInt(pathParts[4]);
+
+            // Fetch posts for this subreddit
+            fetch(`/api/r/${subreddit}/posts`)
+                .then(response => response.json())
+                .then(posts => {
+                    const post = posts[postId];
+                    const template = document.getElementById('post-template');
+                    const clonedTemplate = document.importNode(template.content, true);
+
+                    // Update all media paths to include subreddit
+                    const updateMediaPath = (path) => {
+                        if (!path) return path;
+                        if (path.startsWith('/r/')) return path;
+                        if (path.startsWith('/static/')) {
+                            return path.replace('/static/', `/r/${subreddit}/`);
+                        }
+                        return `/r/${subreddit}${path}`;
+                    };
+
+                    // Set post content
+                    clonedTemplate.querySelector('.post-title').textContent = post.title;
+                    clonedTemplate.querySelector('.vote-count').textContent = post.score;
+                    clonedTemplate.querySelector('.post-text').textContent = post.text;
+
+                    // Set author and link information
+                    const postAuthor = clonedTemplate.querySelector('.post-author');
+                    const linkElement = clonedTemplate.querySelector('.post-info a');
+                    
+                    if (postAuthor) {
+                        postAuthor.textContent = `Posted by u/${post.author}`;
+                    }
+                    
+                    if (linkElement) {
+                        linkElement.href = post.url;
+                        linkElement.target = '_blank';
+                        linkElement.rel = 'noopener noreferrer';
+                    }
+
+                    // Set media
+                    const mediaDiv = clonedTemplate.querySelector('.post-media');
+                    if (post.local_media) {
+                        if (typeof post.local_media === 'string') {
+                            const mediaPath = updateMediaPath(post.local_media);
+                            if (mediaPath.endsWith('.jpg') || mediaPath.endsWith('.jpeg') ||
+                                mediaPath.endsWith('.png') || mediaPath.endsWith('.gif') || mediaPath.endsWith('.webp')) {
+                                mediaDiv.innerHTML = `
+                                    <img src="${mediaPath}" alt="Post image" class="single-image"
+                                         onclick="openModal('${mediaPath}')"
+                                         onload="adjustImageAspectRatio(this)">`;
+                            } else if (mediaPath.endsWith('.mp4') || mediaPath.endsWith('.webm')) {
+                                mediaDiv.innerHTML = `
+                                    <div class="video-container">
+                                        <video controls>
+                                            <source src="${mediaPath}" type="video/mp4">
+                                        </video>
+                                    </div>`;
+                            }
+                        } else if (Array.isArray(post.local_media)) {
+                            let galleryHTML = `
+                                <div class="gallery-container">
+                                    ${post.local_media.map((url, index) => {
+                                        const mediaPath = updateMediaPath(url);
+                                        return `
+                                        <div class="gallery-slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+                                            <img src="${mediaPath}" alt="Gallery image"
+                                                 onclick="openModal('${mediaPath}')"
+                                                 onload="adjustImageAspectRatio(this)">
+                                        </div>`;
+                                    }).join('')}
+
+                                    ${post.local_media.length > 1 ? `
+                                        <button class="gallery-nav gallery-prev" onclick="changeSlide(this.parentElement, -1)">‹</button>
+                                        <button class="gallery-nav gallery-next" onclick="changeSlide(this.parentElement, 1)">›</button>
+                                        <div class="gallery-counter">
+                                            <span class="current-slide">1</span> / ${post.local_media.length}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                            mediaDiv.innerHTML = galleryHTML;
+                        }
+                    }
+
+                    // Set and display comments
+                    const commentsSection = clonedTemplate.querySelector('.comments-section');
+                    const commentsHeader = clonedTemplate.querySelector('.comments-header');
+                    
+                    if (post.comments && post.comments.length > 0) {
+                        commentsHeader.textContent = `Comments (${post.comments.length})`;
+                        post.comments.forEach(comment => {
+                            const commentDiv = document.createElement('div');
+                            commentDiv.className = 'comment';
+                            commentDiv.innerHTML = `
+                                <div class="comment-meta">u/${comment.author} · ${comment.score} points</div>
+                                <div class="comment-body">${comment.body}</div>
+                            `;
+                            commentsSection.appendChild(commentDiv);
+                        });
+                    } else {
+                        commentsHeader.textContent = 'No comments available';
+                    }
+
+                    // Add community header and main container structure
+                    const communityHeader = document.createElement('div');
+                    communityHeader.className = 'community-header';
+                    communityHeader.innerHTML = `
+                        <div class="community-header-content">
+                            <h2>Offline Archive of r/${subreddit}</h2>
+                            <div class="community-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">${posts.length}</span>
+                                    <span class="stat-label">posts</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">${posts.reduce((sum, p) => sum + p.score, 0)}</span>
+                                    <span class="stat-label">points</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    const mainContainer = document.createElement('div');
+                    mainContainer.className = 'main-container';
+                    
+                    // Create sidebar
+                    const sidebarContainer = document.createElement('div');
+                    sidebarContainer.className = 'sidebar-container';
+                    
+                    // About card
+                    const aboutCard = document.createElement('div');
+                    aboutCard.className = 'sidebar-card';
+                    aboutCard.innerHTML = `
+                        <div class="sidebar-card-header">About Community</div>
+                        <p style="font-size: 13px;">This is an offline archive of r/${subreddit}.</p>
+                        <div class="community-stats" style="margin-top: 12px;">
+                            <div class="stat-item">
+                                <span class="stat-value">${posts.length}</span>
+                                <span class="stat-label">Posts</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">${posts.reduce((sum, p) => sum + p.score, 0)}</span>
+                                <span class="stat-label">Points</span>
+                            </div>
+                        </div>
+                    `;
+                    sidebarContainer.appendChild(aboutCard);
+                    
+                    // Subreddits card
+                    const subredditsCard = document.createElement('div');
+                    subredditsCard.className = 'sidebar-card';
+                    subredditsCard.innerHTML = `
+                        <div class="sidebar-card-header">Subreddits</div>
+                        <ul class="sidebar-list">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/r/${subreddit}">Back to r/${subreddit}</a></li>
+                            ${posts.map((_, index) => `
+                                <li><a href="/r/${subreddit}/post/${index}">Post ${index + 1}</a></li>
+                            `).join('')}
+                        </ul>
+                    `;
+                    sidebarContainer.appendChild(subredditsCard);
+                    
+                    // Create content container
+                    const contentContainer = document.createElement('div');
+                    contentContainer.className = 'content-container';
+                    contentContainer.appendChild(clonedTemplate);
+                    
+                    mainContainer.appendChild(communityHeader);
+                    mainContainer.appendChild(contentContainer);
+                    mainContainer.appendChild(sidebarContainer);
+
+                    // Replace body content
+                    document.body.innerHTML = '';
+                    document.body.appendChild(mainContainer);
+                    
+                    // Initialize lazy loading if needed
+                    initLazyLoading();
+                })
+                .catch(error => {
+                    console.error('Error loading post:', error);
+                    document.body.innerHTML = `<div style="padding: 20px; text-align: center;">Error loading post: ${error.message}</div>`;
+                });
+        }
+    </script>
+</body>
+</html>

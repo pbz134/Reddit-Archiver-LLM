@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Archived Subreddits</title>
+    <style>
+        body { font-family: Verdana, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        .subreddit-list { list-style: none; padding: 0; }
+        .subreddit-item { margin: 10px 0; }
+        .subreddit-link { 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px; 
+            background: #0079d3; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px;
+        }
+        .subreddit-link:hover { background: #0061a8; }
+        .post-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Archived Subreddits</h1>
+    <ul class="subreddit-list">
+        {% for subreddit in subreddits %}
+        <li class="subreddit-item">
+            <a href="/r/{{ subreddit.name }}" class="subreddit-link">
+                <span>r/{{ subreddit.name }}</span>
+                <span class="post-count">{{ subreddit.post_count }} posts</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
