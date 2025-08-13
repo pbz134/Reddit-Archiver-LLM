@@ -38,7 +38,7 @@ We will also merge all search term media folders into one
 Lastly, we will delete duplicate media files
 - `python 6-delete-dupes.py .\search-results\Touhou`
 
-Move your final archive.json file, as well as the "images" and "videos" folders into /r/Touhou/
+Move your final archive.json file, as well as the "images" and "videos" folders into Reddit-Archiver-LLM/r/Touhou/
 
 # Launching the viewer
 - To view your downloaded subreddit, execute `python app.py` and visit `http://127.0.0.1:5000/r/` in your browser
