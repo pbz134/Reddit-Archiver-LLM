@@ -7,8 +7,8 @@ from datetime import datetime
 import time
 
 # Configuration
-REDDIT_CLIENT_ID = 'axpuodBt4YCmRabQX6NVpw'
-REDDIT_SECRET = '_8qmePmBYRzlkmHzEMBl9fnwiyavXw'
+REDDIT_CLIENT_ID = 'Put your Client ID here'
+REDDIT_SECRET = 'Put your Secret here'
 REDDIT_USER_AGENT = 'SubredditArchiver/1.0'
 POST_LIMIT = 1000
 COMMENT_LIMIT = 500
@@ -294,4 +294,5 @@ if __name__ == '__main__':
     print(f"\nCompleted {total_success}/{len(search_terms)} searches with {total_posts} total posts in {time.time() - start_time:.2f} seconds")
     print(f"Results saved to:")
     print(f"- Metadata: ./search-results/[subreddit]_[term].txt")
+
     print(f"- Media:    ./search-results/media/[subreddit]/[term]/")
