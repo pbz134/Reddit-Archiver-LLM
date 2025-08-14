@@ -12,7 +12,7 @@ To get started using the archiver, first obtain your Reddit API and Secret key
   - For the redirect URL, input `http://localhost:8080`
 - After creating the app, note down the `secret` and `Client ID` value, found below your blue app name
 - Git clone my repo: `git clone https://github.com/pbz134/Reddit-Archiver-LLM`
-- Insert your own `CLIENT_ID` and `REDDIT_SECRET` strings at line 11 and 12 of `download_media.py` and into the `.env` file, as well as line 10 and 11 `2-download-from-txt.py`
+- Insert your own `CLIENT_ID` and `REDDIT_SECRET` strings at line 11 and 12 of `download_media.py` and into the `.env` file, as well as line 10 and 11 of `2-download-from-txt.py`
 
 Now, we will initiate the raw subreddit download of 1000 posts. For this example, we will use r/Touhou.
 - `pip install -r requirements.txt`
